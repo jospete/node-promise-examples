@@ -9,6 +9,7 @@ const rl = createInterface({
 });
 
 const ask = (question: string): Promise<string> => {
+
 	return new Promise((resolve, reject) => {
 
 		rl.question(question, (result: string) => {

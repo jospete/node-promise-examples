@@ -23,6 +23,8 @@ const ask = (question: string, callback: (error: any, result: string | undefined
 /**
  * Brain-dead approach - check for error at each step, otherwise make next call in sequence.
  * This is hard to read, and REALLY hard to maintain as logic complexity grows.
+ * 
+ * Continue to stage-1-callback-hell-p2.ts
  */
 const run = (callback: (error: any) => void): void => {
 

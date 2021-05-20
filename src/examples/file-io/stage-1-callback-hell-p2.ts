@@ -23,6 +23,9 @@ const ask = (question: string, callback: (error: any, result: string | undefined
 /**
  * Can we just save the values in the upper scope?
  * This would flatten our logic to a list-like structure, which is much easier to read and maintain.
+ * 
+ * Read src/promise-syntax.ts, then
+ * Continue to stage-2-promise-chains.ts
  */
 const run = (callback: (error: any) => void): void => {
 
