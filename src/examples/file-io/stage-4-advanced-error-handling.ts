@@ -10,6 +10,7 @@ const rl = createInterface({
 });
 
 const ask = (question: string): Promise<string> => {
+
 	return new Promise((resolve, reject) => {
 
 		const closeEvent = 'close';

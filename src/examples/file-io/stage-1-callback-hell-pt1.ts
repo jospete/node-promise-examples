@@ -21,11 +21,8 @@ const ask = (question: string, callback: (error: any, result: string | undefined
 };
 
 /**
- * Can we just save the values in the upper scope?
- * This would flatten our logic to a list-like structure, which is much easier to read and maintain.
- * 
- * Read src/promise-syntax.ts, then
- * Continue to stage-2-promise-chains.ts
+ * !!! BAD CODE - DO NOT COPY !!!
+ * Naive approach, AKA "what is async?"
  */
 const run = (callback: (error: any) => void): void => {
 
@@ -35,40 +32,47 @@ const run = (callback: (error: any) => void): void => {
 	let input1: string;
 	let input2: string;
 
-	ask('enter first file name: ', (e, ip1) => {
+	ask('enter first file name: ', (e, v) => {
+		console.log('first file name cb: ', e, v);
 		if (e) return callback(e);
-		inputPath1 = ip1!;
+		inputPath1 = v!;
 	});
 
-	ask('enter second file name: ', (e, ip2) => {
+	ask('enter second file name: ', (e, v) => {
+		console.log('second file name cb: ', e, v);
 		if (e) return callback(e);
-		inputPath2 = ip2!;
+		inputPath2 = v!;
 	});
 
-	ask('enter output file name: ', (e, op) => {
+	ask('enter output file name: ', (e, v) => {
+		console.log('output file name cb: ', e, v);
 		if (e) return callback(e);
-		outputPath = op!;
+		outputPath = v!;
 	});
 
-	readFile(inputPath1!, 'utf8', (e, i1) => {
+	readFile(inputPath1!, 'utf8', (e, v) => {
+		console.log('first file read cb: ', e, v);
 		if (e) return callback(e);
-		input1 = i1!;
+		input1 = v!;
 	});
 
-	readFile(inputPath2!, 'utf8', (e, i2) => {
+	readFile(inputPath2!, 'utf8', (e, v) => {
+		console.log('second file read cb: ', e, v);
 		if (e) return callback(e);
-		input2 = i2!;
+		input2 = v!;
 	});
 
 	const output = makeOutputContent(input1!, input2!);
 
-	writeFile(outputPath!, output, 'utf8', sixthError => {
-		if (sixthError) return callback(sixthError);
+	writeFile(outputPath!, output, 'utf8', e => {
+		console.log('output file write cb: ', e);
+		if (e) return callback(e);
 		callback(null);
 	});
 };
 
 run((error) => {
+
 	if (error) {
 		console.warn('process error! -> ', error);
 		process.exit(1);
