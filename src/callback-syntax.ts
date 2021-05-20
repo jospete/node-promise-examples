@@ -1,4 +1,4 @@
-import { random } from 'lodash';
+const random = (max: number): number => Math.floor(Math.random() * max);
 
 /**
  * Add two values, pass the result back to the given callback.
