@@ -25,7 +25,6 @@ const ask = (question: string, callback: (error: any, result: string | undefined
 };
 
 /**
- * !!! BAD CODE !!!
  * Naive approach, AKA "what is async?"
  */
 const run = (callback: (error: any) => void): void => {
