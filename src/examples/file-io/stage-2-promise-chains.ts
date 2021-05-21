@@ -8,7 +8,12 @@ const rl = createInterface({
 	output: process.stdout
 });
 
+/**
+ * Our ask() operator now returns a promise instead of taking a callback.
+ * See promise-syntax.ts for more info.
+ */
 const ask = (question: string): Promise<string> => {
+
 	return new Promise((resolve, reject) => {
 
 		rl.question(question, (result: string) => {
@@ -23,7 +28,11 @@ const ask = (question: string): Promise<string> => {
 };
 
 /**
- * Promises give us the flat list-like structure we want, and handle error checking for us.
+ * Promises give us the flat list-like structure we want, 
+ * and handle error checking for us.
+ * 
+ * Promises also assume the "happy path" of code branching will work,
+ * so we shouldn't ever need to mix in catch blocks. (more on this later)
  */
 const run = (): Promise<any> => {
 

@@ -2,12 +2,40 @@ import { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
 import { createInterface } from 'readline';
 
-import { assertPromise, rejectWith, ErrorContextCode, makeOutputContent } from './file-io-util';
+import { makeOutputContent } from './file-io-util';
 
 const rl = createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
+
+/**
+ * Declare what kinds of errors can happen within the run() scope
+ */
+export enum ErrorContextCode {
+	FIRST_FILE_NOT_GIVEN = 'FIRST_FILE_NOT_GIVEN',
+	FIRST_FILE_NOT_FOUND = 'FIRST_FILE_NOT_FOUND',
+	FIRST_FILE_READ_ERROR = 'FIRST_FILE_READ_ERROR',
+	SECOND_FILE_NOT_GIVEN = 'SECOND_FILE_NOT_GIVEN',
+	SECOND_FILE_NOT_FOUND = 'SECOND_FILE_NOT_FOUND',
+	SECOND_FILE_READ_ERROR = 'SECOND_FILE_READ_ERROR',
+	OUTPUT_FILE_NOT_GIVEN = 'OUTPUT_FILE_NOT_GIVEN',
+	OUTPUT_FILE_WRITE_ERROR = 'OUTPUT_FILE_WRITE_ERROR'
+}
+
+/**
+ * Catches and tags an error with a "code" context so we know where the error came from.
+ */
+export const rejectWith = <T>(promise: Promise<T>, code: any): Promise<T> => {
+	return Promise.resolve(promise).catch(error => Promise.reject({ error, code }));
+};
+
+/**
+ * Like assert() but with promises.
+ */
+export const assertPromise = (condition: boolean, error?: any): Promise<void> => {
+	return condition ? Promise.resolve() : Promise.reject(error);
+};
 
 const ask = (question: string): Promise<string> => {
 
@@ -28,6 +56,10 @@ const ask = (question: string): Promise<string> => {
 	});
 };
 
+/**
+ * Read terminal input to get a path to a file,
+ * AND assert that the file exists.
+ */
 const loadFilePathFromInput = async (
 	question: string,
 	notGivenError: ErrorContextCode,
@@ -38,6 +70,11 @@ const loadFilePathFromInput = async (
 	return result;
 };
 
+/**
+ * Now gives context at each step when errors happen.
+ * Don't worry about an error happening within the operation chain.
+ * Instead, make it the caller's responsibility to diagnose errors.
+ */
 const run = async (): Promise<any> => {
 
 	const inputPath1 = await loadFilePathFromInput(
@@ -71,7 +108,7 @@ const run = async (): Promise<any> => {
 
 	await rejectWith(
 		writeFile(outputPath, output, 'utf8'),
-		ErrorContextCode.SECOND_FILE_READ_ERROR
+		ErrorContextCode.OUTPUT_FILE_WRITE_ERROR
 	);
 };
 
@@ -93,6 +130,7 @@ run()
 				break;
 			default:
 				console.log('unhandled code: ' + code);
+				break;
 		}
 
 		process.exit(1);

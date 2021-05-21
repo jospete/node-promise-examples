@@ -8,6 +8,10 @@ const rl = createInterface({
 	output: process.stdout
 });
 
+/**
+ * Prompt the terminal with a question, 
+ * intercept input and hand it off to "callback".
+ */
 const ask = (question: string, callback: (error: any, result: string | undefined) => void): void => {
 
 	rl.question(question, (result: string) => {
@@ -21,7 +25,7 @@ const ask = (question: string, callback: (error: any, result: string | undefined
 };
 
 /**
- * !!! BAD CODE - DO NOT COPY !!!
+ * !!! BAD CODE !!!
  * Brain-dead approach - check for error at each step, otherwise make next call in sequence.
  * This is hard to read, and REALLY hard to maintain as logic complexity grows.
  */
